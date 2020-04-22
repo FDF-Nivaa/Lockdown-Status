@@ -1,5 +1,5 @@
 <template>
-  <li class="goal" :class="{achieved}" :style="{'transition-delay': `${transitionDelay}ms`}">
+  <li class="goal" :class="{achieved, surpassed}" :style="{'--transition-delay': `${transitionDelay}ms`}">
     <div class="goal-image-wrapper">
       <img class="goal-image" :src="`/${goal.image}`" alt="">
     </div>
@@ -24,6 +24,10 @@
         type: Object,
         required: true
       },
+      nextGoal: {
+        type: Object,
+        default: null
+      },
       index: {
         type: Number,
         default: 0
@@ -37,12 +41,15 @@
       achieved() {
         return this.goal.value <= this.compareValue
       },
+      surpassed() {
+        return this.nextGoal && this.nextGoal.value <= this.compareValue
+      },
       formattedValue() {
         return formatNumber(this.goal.value)
       },
       transitionDelay() {
         if (this.achieved) {
-          return this.index * 500
+          return this.index * 1000
         }
 
         return 0
@@ -53,6 +60,8 @@
 
 <style scoped>
   .goal {
+    --transition-delay: 0ms;
+
     position: relative;
     display: grid;
     grid-template-columns: 12em auto;
@@ -63,6 +72,21 @@
     box-shadow: 0 0.05em 0.15em rgba(0, 0, 0, 0.2);
     text-align: left;
     transition: all .5s ease-in-out;
+    transition-delay: var(--transition-delay);
+  }
+  .goal::after {
+    content: "";
+    position: absolute;
+    display: block;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: url('/crossout.svg') no-repeat 50% 50%;
+    background-size: 80% 90%;
+    opacity: 0;
+    transition: all .5s ease-in-out;
+    transition-delay: calc(var(--transition-delay) + 500ms);
   }
 
   .goal-value {
@@ -112,11 +136,21 @@
 
   .goal:not(.achieved) {
     opacity: .5;
+    transform: scale(.85);
     filter: grayscale(100%);
   }
 
   .goal:not(.achieved):not(:hover) {
     filter: grayscale(100%) blur(.25em);
+  }
+
+  .goal.surpassed {
+    filter: grayscale(40%);
+    transform: scale(.85);
+  }
+
+  .goal.surpassed::after {
+    opacity: 0;
   }
 
   @media (max-width: 30rem) {

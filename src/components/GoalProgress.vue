@@ -9,7 +9,14 @@
       <a href="https://xn--fdfniv-nua.dk/arrangementer/lockdown/">⬅ Tilbage til hjemmesiden</a>
     </p>
     <ul class="goal-progress-list">
-      <Goal v-for="(goal, index) in goals" :goal="goal" :index="index" :compare-value="compareValue" :key="goal.value"/>
+      <Goal
+        v-for="(goal, index) in goals"
+        :goal="goal"
+        :nextGoal="goals[index + 1]"
+        :index="index"
+        :compare-value="compareValue"
+        :key="goal.value"
+      />
     </ul>
   </article>
 </template>

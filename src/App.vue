@@ -15,7 +15,7 @@
     },
     data() {
       return {
-        compareValue: 75,
+        compareValue: -1,
         goals: [
           {
             name: "Rens en bålgryde",
@@ -61,6 +61,11 @@
           },
         ]
       }
+    },
+    mounted() {
+      setTimeout(() => {
+        this.compareValue = 100
+      },0)
     }
   }
 </script>
