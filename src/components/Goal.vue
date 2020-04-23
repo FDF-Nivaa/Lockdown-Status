@@ -79,6 +79,7 @@
     transition: all .5s ease-in-out;
     transition-delay: var(--transition-delay);
   }
+  /*
   .goal::after {
     content: "";
     position: absolute;
@@ -93,6 +94,7 @@
     transition: all .5s ease-in-out;
     transition-delay: calc(var(--transition-delay) + 500ms);
   }
+  */
 
   .goal-value {
     position: absolute;
@@ -154,9 +156,11 @@
     transform: scale(.85);
   }
 
+  /*
   .goal.surpassed::after {
-    opacity: 0;
+    opacity: 1;
   }
+  */
 
   @media (max-width: 30rem) {
     .goal {
