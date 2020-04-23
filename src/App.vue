@@ -55,6 +55,7 @@
             }))
           })
           .then(goals => {
+            goals.sort((a, b) => a.value - b.value)
             this.goals = goals
           })
       ])
