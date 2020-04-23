@@ -131,6 +131,8 @@
   .goal-image {
     display: block;
     width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .goal-text-wrapper {
@@ -166,10 +168,6 @@
     .goal {
       grid-template-columns: 40% auto;
       font-size: .8125rem;
-    }
-    .goal-image {
-      object-fit: cover;
-      height: 100%;
     }
     .goal-value {
       left: 20%;
