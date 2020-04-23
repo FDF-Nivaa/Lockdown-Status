@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <input class="fake-value-input" type="range" min="0" max="2500" v-model="compareValue">
-    <GoalProgress :goals="goals" :compare-value="compareValue"/>
+    <p v-if="loading">Henter data...</p>
+    <GoalProgress v-else :goals="goals" :compare-value="compareValue"/>
   </div>
 </template>
 
@@ -16,56 +16,48 @@
     data() {
       return {
         compareValue: -1,
-        goals: [
-          {
-            name: "Rens en bålgryde",
-            description: "Vi hygger os rigtigt med at rense alle kredsens gamle bålgryder.",
-            image: "bålgryde.jpg",
-            value: 0
-          },
-          {
-            name: "Sortering af telte",
-            description: "Vi slår alle teltene op og pakker dem pænt ned igen.",
-            image: "telte.jpg",
-            value: 50
-          },
-          {
-            name: "En tur til Hørsholm",
-            image: "hørsholm.jpg",
-            value: 100
-          },
-          {
-            name: "En gakket tur om Lergraven",
-            image: "tur.jpg",
-            value: 200
-          },
-          {
-            name: "Rundtur i Nivå Kirke",
-            image: "kirke.jpg",
-            value: 400
-          },
-          {
-            name: "Tur til Kronborg — med is!",
-            image: "is.jpg",
-            value: 800
-          },
-          {
-            name: "Hotdogs og dessert på bål",
-            image: "hotdogs.jpg",
-            value: 1200
-          },
-          {
-            name: "Udendørs biograf",
-            image: "biograf.jpg",
-            value: 2000
-          },
-        ]
+        sheetId: '1s2IkwIBHSrzTqa0pHZejYtr8cYOZ9_ZDaS9j4TfJOhw',
+        loading: true,
+        goals: []
       }
     },
+    computed: {
+      jsonPointsSheetUrl() {
+        return `https://spreadsheets.google.com/feeds/list/${this.sheetId}/1/public/values?alt=json`
+      },
+      jsonGoalsSheetUrl() {
+        return `https://spreadsheets.google.com/feeds/list/${this.sheetId}/2/public/values?alt=json`
+      },
+    },
     mounted() {
-      setTimeout(() => {
-        this.compareValue = 100
-      },0)
+      return Promise.all([
+        fetch(this.jsonPointsSheetUrl)
+          .then(response => response.json())
+          .then(data => {
+            return data.feed.entry.reduce((total, entry) => {
+              return total + (parseInt(entry.gsx$point.$t) || 0)
+            }, 0)
+          }).then((value) => {
+          this.loading = false
+
+          setTimeout(() => {
+            this.compareValue = value
+          })
+        }),
+        fetch(this.jsonGoalsSheetUrl)
+          .then(response => response.json())
+          .then(data => {
+            return data.feed.entry.map(entry => ({
+              name: entry.gsx$navn.$t,
+              description: entry.gsx$beskrivelse.$t,
+              image: entry.gsx$billede.$t,
+              value: parseInt(entry.gsx$point.$t)
+            }))
+          })
+          .then(goals => {
+            this.goals = goals
+          })
+      ])
     }
   }
 </script>

@@ -15,7 +15,7 @@
         :nextGoal="goals[index + 1]"
         :index="index"
         :compare-value="compareValue"
-        :key="goal.value"
+        :key="goal.name"
       />
     </ul>
   </article>
@@ -24,7 +24,6 @@
 <script>
   import AnimatedNumber from "./AnimatedNumber";
   import Goal from "./Goal";
-  import {formatNumber} from "../utils/format";
 
   export default {
     name: "GoalProgress",
@@ -37,11 +36,6 @@
       goals: {
         type: Array,
         required: true
-      }
-    },
-    computed: {
-      formattedCompareValue() {
-        return formatNumber(this.compareValue)
       }
     },
   }

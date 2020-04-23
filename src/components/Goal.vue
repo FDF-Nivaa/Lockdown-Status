@@ -39,10 +39,10 @@
     },
     computed: {
       achieved() {
-        return this.goal.value <= this.compareValue
+        return this.isGoalAchieved(this.goal)
       },
       surpassed() {
-        return this.nextGoal && this.nextGoal.value <= this.compareValue
+        return this.isGoalAchieved(this.nextGoal)
       },
       formattedValue() {
         return formatNumber(this.goal.value)
@@ -53,6 +53,11 @@
         }
 
         return 0
+      }
+    },
+    methods: {
+      isGoalAchieved(goal) {
+        return goal && this.compareValue >= 0 && goal.value <= this.compareValue
       }
     }
   }
