@@ -1,4 +1,8 @@
-# multi-goal-progress
+# Lockdown Status
+
+A tiny static website for displaying the points collected throughout the Corona Covic-19 lockdown period.
+
+All data is extracted from a Google Sheet via their JSON API.
 
 ## Project setup
 ```
